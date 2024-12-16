@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-source-infos>
+      <data-source-info id="a3f9c95f-c6e6-427b-8584-d8a0ca20d2a6" persistence-unit-name="JCatalog:JCatalog" />
+    </data-source-infos>
+  </component>
+</project>

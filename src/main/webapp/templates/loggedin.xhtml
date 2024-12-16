@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title><ui:insert name="pageTitle">Page Title</ui:insert></title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/twocolumn.css" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/navigation.css" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/form.css" />
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+</h:head>
+
+<h:body>
+
+    <div id="container">
+
+        <div id="top">
+            <ui:insert name="pageHeader">Page Header</ui:insert>
+        </div>
+
+        <div id="leftnav">
+            <ui:insert name="leftnav">
+                <h:form id="navcontainer">
+                    <ul>
+                        <li>
+                            <h:link action="contact">
+                                <h:outputText id="contact" value="Cont@ct" />
+                            </h:link>
+                        </li>
+                        <li>
+                            <h:link action="categories">
+                                <h:outputText id="catalog" value="Catalog" />
+                            </h:link>
+                        </li>
+                        <li>
+                            <h:link action="#{UserManager.logout}" id="logoutLink">
+                                <h:outputText id="logout" value="Logout" />
+                            </h:link>
+                        </li>
+                    </ul>
+                </h:form>
+            </ui:insert>
+        </div>
+
+        <div id="content">
+            <ui:insert name="body">Page Body</ui:insert>
+        </div>
+
+        <div id="footer">
+            <ui:insert name="footer">Page Footer</ui:insert>
+        </div>
+
+    </div> <!--  id="container"  -->
+
+</h:body>
+</html>

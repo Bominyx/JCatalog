@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/templates/common.xhtml">
+
+    <ui:define name="pageTitle">JCatalog Login</ui:define>
+
+    <ui:define name="pageHeader">Login</ui:define>
+
+    <ui:define name="body">
+        <div style="width: 500px; padding: 5px; margin: 0px auto; float: left;">
+            <h:form id="loginForm">
+                <h:inputHidden id="action" value="login" />
+                <div class="row">
+                    <label for="username"><u>U</u>sername:</label>
+                    <span class="formw"><h:inputText id="username" value="#{UserManager.username}" accesskey="u" size="40" /></span>
+                </div>
+                <div class="row">
+                    <label for="password"><u>P</u>assword:</label>
+                    <span class="formw"><h:inputSecret id="password" value="#{UserManager.password}" accesskey="p" size="32" /></span>
+                </div>
+                <div class="row">
+				<span class="formw">
+					<h:commandButton action="#{UserManager.login}" id="submit" value="Login" type="submit" accesskey="s" />
+				</span>
+                </div>
+                <div class="spacer" />
+            </h:form>
+        </div>
+    </ui:define>
+
+    <ui:define name="pageFooter">JCatalog Footer</ui:define>
+
+</ui:composition>
+</html>
