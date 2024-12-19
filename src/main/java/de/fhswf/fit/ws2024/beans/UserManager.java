@@ -1,12 +1,3 @@
-/*
- * $RCSFile$
- *
- * Created on 06.12.2006
- * for Project: 
- * by steins
- *
- * (C) 2005-2006 by 
- */
 package de.fhswf.fit.ws2024.beans;
 
 import java.io.Serializable;
@@ -15,22 +6,16 @@ import java.util.List;
 import org.apache.commons.codec.digest.Crypt;
 
 import de.fhswf.fit.ws2024.catalogdb.User;
-//import static util.DigestUtils.md5;
-import de.fhswf.fit.ws2024.util.DigestUtils;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 
 @Named("UserManager")
 @SessionScoped
 public class UserManager implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private User current;
@@ -46,35 +31,33 @@ public class UserManager implements Serializable {
 
 	public String login() {
 		String outcome = "failure";
-		if (current.getUsername() != null && current.getUsername().length() > 0
+		if (current.getUsername() != null && !current.getUsername().isEmpty()
 				&& current.getPassword() != null
-				&& current.getPassword().length() > 0) {
+				&& !current.getPassword().isEmpty()) {
 			EntityManagerFactory factory = CatalogManagerFactory.getInstance();
 			EntityManager manager = factory.createEntityManager();
 			
 			Query query = manager.createQuery("SELECT u FROM User u where u.username = :username");
 			query.setParameter("username", current.getUsername());
-			
-//			Query query = manager
-//					.createQuery("SELECT u FROM User u where u.username = :username and u.password = :password");
-//			query.setParameter("username", current.getUsername());
-//			query.setParameter("password", DigestUtils.md5(current.getPassword()));
-			List<User> results = query.getResultList();
-			String pwHashDB = results.get(0).getPassword();
-			String[] parts = pwHashDB.split("\\$");
-			String salt = "$" + parts[1] + "$" + parts[2];
 
-			String generatedHash = Crypt.crypt(current.getPassword(), salt);
-			System.out.println("pwHashDB: " + pwHashDB);
-			System.out.println("genHash: " + generatedHash);
-			if (generatedHash.equals(pwHashDB)) {
-				System.out.println("Login Successful");
-				loggedIn = true;
-				current = (User) results.get(0);
-				outcome = "success";
+			List<User> results = query.getResultList();
+			if (!results.isEmpty()) {
+				String pwHashDB = results.get(0).getPassword();
+				String[] parts = pwHashDB.split("\\$");
+				String salt = "$" + parts[1] + "$" + parts[2];
+				System.out.println("salt: " + salt);
+
+				String generatedHash = Crypt.crypt(current.getPassword(), salt);
+				System.out.println("pwHashDB: " + pwHashDB);
+				System.out.println("genHash: " + generatedHash);
+				if (generatedHash.equals(pwHashDB)) {
+					System.out.println("Login Successful");
+					loggedIn = true;
+					current = (User) results.get(0);
+					outcome = "success";
+				}
 			}
 		}
-		// System.out.println(outcome);
 		return outcome;
 	}
 
@@ -105,8 +88,7 @@ public class UserManager implements Serializable {
 	}
 
 	public User getCurrent() {
-		EntityManagerFactory factory = Persistence
-				.createEntityManagerFactory("catalog");
+		EntityManagerFactory factory = CatalogManagerFactory.getInstance();
 		EntityManager manager = factory.createEntityManager();
 
 		EntityTransaction tx = manager.getTransaction();
@@ -121,5 +103,21 @@ public class UserManager implements Serializable {
 		}
 
 		return current;
+	}
+
+	public void createUser() {
+		EntityManagerFactory factory = CatalogManagerFactory.getInstance();
+		EntityManager manager = factory.createEntityManager();
+		EntityTransaction tx = manager.getTransaction();
+		String generatedHash = Crypt.crypt(current.getPassword());
+		current.setPassword(generatedHash);
+		tx.begin();
+		try {
+			manager.persist(current);
+			tx.commit();
+		} catch (Exception ex) {
+			ex.printStackTrace(System.err);
+			tx.rollback();
+		}
 	}
 }
