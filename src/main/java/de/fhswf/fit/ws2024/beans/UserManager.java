@@ -31,9 +31,9 @@ public class UserManager implements Serializable {
 
 	public String login() {
 		String outcome = "failure";
-		if (current.getUsername() != null && !current.getUsername().isEmpty()
+		if (current.getUsername() != null && !current.getUsername().isBlank()
 				&& current.getPassword() != null
-				&& !current.getPassword().isEmpty()) {
+				&& !current.getPassword().isBlank()) {
 			EntityManagerFactory factory = CatalogManagerFactory.getInstance();
 			EntityManager manager = factory.createEntityManager();
 			
