@@ -26,19 +26,19 @@
                 <h:form id="navcontainer">
                     <ul>
                         <li>
-                            <h:link action="contact">
+                            <h:link outcome="contact">
                                 <h:outputText id="contact" value="Cont@ct" />
                             </h:link>
                         </li>
                         <li>
-                            <h:link action="categories">
+                            <h:link outcome="categories">
                                 <h:outputText id="catalog" value="Catalog" />
                             </h:link>
                         </li>
                         <li>
-                            <h:link action="#{UserManager.logout}" id="logoutLink">
+                            <h:commandLink action="#{UserManager.logout}" id="logoutLink">
                                 <h:outputText id="logout" value="Logout" />
-                            </h:link>
+                            </h:commandLink>
                         </li>
                     </ul>
                 </h:form>

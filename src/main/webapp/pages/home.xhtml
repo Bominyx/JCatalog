@@ -9,7 +9,7 @@
     <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
 </head>
 
-<ui:composition template="/templates/common.xhtml">
+<ui:composition template="#{UserManager.loggedIn ? '/templates/loggedin.xhtml' : '/templates/common.xhtml'}">
 
     <ui:define name="pageTitle">JCatalog Application</ui:define>
 
