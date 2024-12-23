@@ -1,12 +1,3 @@
-/*
- * $RCSFile$
- *
- * Created on 11.06.2007
- * for Project: 
- * by steins
- *
- * (C) 2005-2006 by 
- */
 package de.fhswf.fit.ws2024.beans;
 
 import java.io.IOException;
@@ -77,4 +68,31 @@ private Product current;
       context.responseComplete();
    }
 
+   void createProduct(){
+         EntityManagerFactory factory = CatalogManagerFactory.getInstance();
+         EntityManager manager = factory.createEntityManager();
+         EntityTransaction tx = manager.getTransaction();
+         tx.begin();
+         try {
+              manager.persist(current);
+              tx.commit();
+         } catch (Exception ex) {
+              ex.printStackTrace(System.err);
+              tx.rollback();
+         }
+   }
+
+   public void deleteProduct(){
+         EntityManagerFactory factory = CatalogManagerFactory.getInstance();
+         EntityManager manager = factory.createEntityManager();
+         EntityTransaction tx = manager.getTransaction();
+         tx.begin();
+         try {
+              manager.remove(current);
+              tx.commit();
+         } catch (Exception ex) {
+              ex.printStackTrace(System.err);
+              tx.rollback();
+         }
+   }
 }
