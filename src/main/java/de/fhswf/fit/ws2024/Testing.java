@@ -9,11 +9,12 @@ public class Testing {
         System.out.println("generatedHash: " + generatedHash);
 
         UserManager userManager = new UserManager();
-        userManager.setUsername("TestUser");
+        userManager.setUsername("TestUser7");
         userManager.setPassword("TestPassword");
         System.out.println("Username: " + userManager.getUsername());
         System.out.println("Password: " + userManager.getPassword());
         userManager.createUser();
+        userManager.setPassword("TestPassword");
         System.out.println(userManager.login());
     }
 }
