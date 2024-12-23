@@ -9,19 +9,14 @@ import jakarta.persistence.Persistence;
 @ApplicationScoped
 public class CatalogManagerFactory {
 
-    private static EntityManagerFactory factory;
-
-    private CatalogManagerFactory() {}
+    private EntityManagerFactory factory;
     
-//    @PostConstruct
-//    public void init() {
-//        factory = Persistence.createEntityManagerFactory("JCatalog");
-//    }
+    @PostConstruct
+    public void init() {
+        factory = Persistence.createEntityManagerFactory("JCatalog");
+    }
 
-    static public EntityManagerFactory getInstance() {
-    	if (factory == null) {
-    		factory = Persistence.createEntityManagerFactory("JCatalog");
-    	}
+    public EntityManagerFactory getFactory() {
         return factory;
     }
 
@@ -31,4 +26,5 @@ public class CatalogManagerFactory {
             factory.close();
         }
     }
+
 }

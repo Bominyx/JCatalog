@@ -2,6 +2,7 @@ package de.fhswf.fit.ws2024.beans;
 
 import java.io.Serializable;
 
+import jakarta.inject.Inject;
 import org.apache.commons.codec.digest.Crypt;
 
 import de.fhswf.fit.ws2024.catalogdb.User;
@@ -14,97 +15,97 @@ import jakarta.persistence.EntityTransaction;
 @Named("UserManager")
 @SessionScoped
 public class UserManager implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private User current;
+    private User current;
 
-	private boolean loggedIn;
+    private boolean loggedIn;
 
-//	@Inject
-//	private CatalogManagerFactory catalogManager;
-	
-	public UserManager() {
-		current = new User();
-	}
+    @Inject
+    private CatalogManagerFactory catalogManagerFactory;
 
-	public String login() {
-		String outcome = "failure";
-		if (current.getUsername() != null && !current.getUsername().isBlank()
-				&& current.getPassword() != null
-				&& !current.getPassword().isBlank()) {
-			EntityManagerFactory factory = CatalogManagerFactory.getInstance();
-			EntityManager manager = factory.createEntityManager();
+    public UserManager() {
+        current = new User();
+    }
 
-			User user = manager.find(User.class, current.getUsername());
+    public String login() {
+        String outcome = "failure";
+        if (current.getUsername() != null && !current.getUsername().isBlank()
+                && current.getPassword() != null
+                && !current.getPassword().isBlank()) {
+            EntityManagerFactory factory = catalogManagerFactory.getFactory();
+            EntityManager manager = factory.createEntityManager();
 
-			if (Crypt.crypt(current.getPassword(), user.getPassword()).equals(user.getPassword())) {
-				System.out.println("Login Successful");
-				loggedIn = true;
-				current = user;
-				outcome = "home";
-			}
+            User user = manager.find(User.class, current.getUsername());
 
-		}
-		return outcome;
-	}
+            if (Crypt.crypt(current.getPassword(), user.getPassword()).equals(user.getPassword())) {
+                System.out.println("Login Successful");
+                loggedIn = true;
+                current = user;
+                outcome = "home";
+            }
 
-	public String logout() {
-		loggedIn = false;
-		current = new User();
-		return "home";
-	}
+        }
+        return outcome;
+    }
 
-	public void setUsername(String username) {
-		current.setUsername(username);
-	}
+    public String logout() {
+        loggedIn = false;
+        current = new User();
+        return "home";
+    }
 
-	public String getUsername() {
-		return current.getUsername();
-	}
+    public void setUsername(String username) {
+        current.setUsername(username);
+    }
 
-	public void setPassword(String password) {
-		current.setPassword(password);
-	}
+    public String getUsername() {
+        return current.getUsername();
+    }
 
-	public String getPassword() {
-		return current.getPassword();
-	}
+    public void setPassword(String password) {
+        current.setPassword(password);
+    }
 
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
+    public String getPassword() {
+        return current.getPassword();
+    }
 
-	public User getCurrent() {
-		EntityManagerFactory factory = CatalogManagerFactory.getInstance();
-		EntityManager manager = factory.createEntityManager();
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
 
-		EntityTransaction tx = manager.getTransaction();
-		tx.begin();
-		try {
-			current = manager.find(User.class, getUsername());
+    public User getCurrent() {
+        EntityManagerFactory factory = catalogManagerFactory.getFactory();
+        EntityManager manager = factory.createEntityManager();
 
-			tx.commit();
-		} catch (Exception ex) {
-			ex.printStackTrace(System.err);
-			tx.rollback();
-		}
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        try {
+            current = manager.find(User.class, getUsername());
 
-		return current;
-	}
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            tx.rollback();
+        }
 
-	public void createUser() {
-		EntityManagerFactory factory = CatalogManagerFactory.getInstance();
-		EntityManager manager = factory.createEntityManager();
-		EntityTransaction tx = manager.getTransaction();
-		String generatedHash = Crypt.crypt(current.getPassword());
-		current.setPassword(generatedHash);
-		tx.begin();
-		try {
-			manager.persist(current);
-			tx.commit();
-		} catch (Exception ex) {
-			ex.printStackTrace(System.err);
-			tx.rollback();
-		}
-	}
+        return current;
+    }
+
+    public void createUser() {
+        EntityManagerFactory factory = catalogManagerFactory.getFactory();
+        EntityManager manager = factory.createEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        String generatedHash = Crypt.crypt(current.getPassword());
+        current.setPassword(generatedHash);
+        tx.begin();
+        try {
+            manager.persist(current);
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            tx.rollback();
+        }
+    }
 }
