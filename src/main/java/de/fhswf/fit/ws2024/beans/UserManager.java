@@ -1,7 +1,6 @@
 package de.fhswf.fit.ws2024.beans;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.apache.commons.codec.digest.Crypt;
 
@@ -11,7 +10,6 @@ import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 
 @Named("UserManager")
 @SessionScoped
@@ -36,27 +34,16 @@ public class UserManager implements Serializable {
 				&& !current.getPassword().isBlank()) {
 			EntityManagerFactory factory = CatalogManagerFactory.getInstance();
 			EntityManager manager = factory.createEntityManager();
-			
-			Query query = manager.createQuery("SELECT u FROM User u where u.username = :username");
-			query.setParameter("username", current.getUsername());
 
-			List<User> results = query.getResultList();
-			if (!results.isEmpty()) {
-				String pwHashDB = results.get(0).getPassword();
-				String[] parts = pwHashDB.split("\\$");
-				String salt = "$" + parts[1] + "$" + parts[2];
-				System.out.println("salt: " + salt);
+			User user = manager.find(User.class, current.getUsername());
 
-				String generatedHash = Crypt.crypt(current.getPassword(), salt);
-				System.out.println("pwHashDB: " + pwHashDB);
-				System.out.println("genHash: " + generatedHash);
-				if (generatedHash.equals(pwHashDB)) {
-					System.out.println("Login Successful");
-					loggedIn = true;
-					current = (User) results.get(0);
-					outcome = "success";
-				}
+			if (Crypt.crypt(current.getPassword(), user.getPassword()).equals(user.getPassword())) {
+				System.out.println("Login Successful");
+				loggedIn = true;
+				current = user;
+				outcome = "home";
 			}
+
 		}
 		return outcome;
 	}
