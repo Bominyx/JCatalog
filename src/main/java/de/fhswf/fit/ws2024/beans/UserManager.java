@@ -30,19 +30,17 @@ public class UserManager implements Serializable {
 
     public String login() {
         String outcome = "failure";
-        if (current.getUsername() != null && !current.getUsername().isBlank()
-                && current.getPassword() != null
-                && !current.getPassword().isBlank()) {
+        if (current.isValid()) {
             EntityManagerFactory factory = catalogManagerFactory.getFactory();
             EntityManager manager = factory.createEntityManager();
 
             User user = manager.find(User.class, current.getUsername());
 
-            if (Crypt.crypt(current.getPassword(), user.getPassword()).equals(user.getPassword())) {
+            if (user != null && user.checkPassword(current.getPassword())) {
                 System.out.println("Login Successful");
                 loggedIn = true;
                 current = user;
-                outcome = "home";
+                outcome = "greeting";
             }
 
         }
