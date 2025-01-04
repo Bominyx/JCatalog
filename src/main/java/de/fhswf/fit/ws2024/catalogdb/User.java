@@ -65,6 +65,6 @@ public class User {
      * @return Boolescher Wert, ob das Passwort korrekt ist.
      */
     public boolean checkPassword(String password) {
-        return Crypt.crypt(this.getPassword(), password).equals(password);
+        return this.password.equals(Crypt.crypt(password, this.password));
     }
 }
