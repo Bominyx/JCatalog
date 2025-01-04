@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.apache.commons.codec.digest.Crypt;
 
 import java.util.Objects;
 
@@ -48,5 +49,22 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hashCode(username);
+    }
+
+    /**
+     * Es genügt der Gültigkeit, wenn ein Name und Passwort existieren, welche nicht leer sind.
+     * @return Boolescher Wert, ob die Kategorie gültig ist.
+     */
+    public boolean isValid() {
+        return username != null && !username.isBlank() && password != null && !password.isBlank();
+    }
+
+    /**
+     * Überprüft, ob das übergebene Passwort mit dem gespeicherten Passwort übereinstimmt.
+     * @param password Das zu überprüfende Passwort.
+     * @return Boolescher Wert, ob das Passwort korrekt ist.
+     */
+    public boolean checkPassword(String password) {
+        return Crypt.crypt(this.getPassword(), password).equals(password);
     }
 }

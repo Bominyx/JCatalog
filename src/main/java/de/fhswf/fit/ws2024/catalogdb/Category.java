@@ -74,4 +74,12 @@ public class Category {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    /**
+     * Es genügt der Gültigkeit, wenn ein Name existiert, welcher nicht leer ist.
+     * @return Boolescher Wert, ob die Kategorie gültig ist.
+     */
+    public boolean isValid() {
+        return name != null && !name.isBlank();
+    }
 }

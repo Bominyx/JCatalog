@@ -105,4 +105,12 @@ public class Product {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    /**
+     * Es genügt der Gültigkeit, wenn ein Name existiert, welcher nicht leer ist.
+     * @return Boolescher Wert, ob das Produkt gültig ist.
+     */
+    public boolean isValid() {
+        return name != null && !name.isBlank();
+    }
 }
