@@ -10,26 +10,23 @@
 
     <ui:define name="pageTitle">JCatalog Application</ui:define>
 
-    <ui:define name="pageHeader">Product</ui:define>
+    <ui:define name="pageHeader">New Category</ui:define>
 
     <ui:define name="body">
         <div style="width: 500px; padding: 5px; margin: 0px auto; float: left;">
             <h:form>
                 <div class="row">
                     <label for="name">Name:</label>
-                    <span class="formw"><h:inputText id="name" disabled="true" value="#{ProductManager.current.name}" accesskey="n" size="40" /></span>
-                </div>
-                <div class="row">
-                    <label for="price">Price:</label>
-                    <span class="formw"><h:inputText id="price" disabled="true" value="#{ProductManager.current.price}" accesskey="p" size="40" /></span>
+                    <span class="formw"><h:inputText id="name" disabled="false" value="#{CategoryManager.current.name}" accesskey="n" size="40" /></span>
                 </div>
                 <div class="row">
                     <label for="description">Description:</label>
-                    <span class="formw"><h:inputTextarea rows="20" cols="40" id="description" disabled="true" value="#{ProductManager.current.description}" accesskey="d" /></span>
+                    <span class="formw"><h:inputTextarea rows="20" cols="40" id="description" disabled="false" value="#{CategoryManager.current.description}" accesskey="d" /></span>
                 </div>
                 <div class="row">
 				<span class="formw">
-					<h:commandButton action="products" id="back" value="Back" type="submit" accesskey="b" />
+					<h:commandButton action="categories" id="back" value="Back" type="submit" accesskey="b" />
+                    <h:commandButton action="#{CategoryManager.createCategory}" id="create" value="Create" type="submit" accesskey="c" disabled="#{!UserManager.loggedIn}"/>
 				</span>
                 </div>
                 <div class="spacer" />

@@ -5,7 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:b="http://bootsfaces.net/ui">
+      xmlns:b="http://bootsfaces.net/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
 <ui:composition template="#{UserManager.loggedIn ? '/templates/loggedin.xhtml' : '/templates/common.xhtml'}">
 
     <ui:define name="pageTitle">JCatalog Application</ui:define>
@@ -32,7 +32,30 @@
                         <f:param name="selectedId" value="#{product.id}" />
                     </h:commandLink>
                 </b:dataTableColumn>
+                <c:if test="#{UserManager.loggedIn}">
+
+                    <b:dataTableColumn label="" orderable="false">
+                        <h:commandLink value="Delete" immediate="true"
+                                       actionListener="#{ProductManager.deleteProduct}" action="select">
+                            <f:param name="selectedId" value="#{product.id}" />
+                        </h:commandLink>
+                    </b:dataTableColumn>
+
+                    <b:dataTableColumn label="" orderable="false">
+                        <h:commandLink value="Edit" immediate="true"
+                                       actionListener="#{ProductManager.updateRedirect}" action="select">
+                            <f:param name="selectedId" value="#{product.id}" />
+                        </h:commandLink>
+                    </b:dataTableColumn>
+
+                </c:if>
             </b:dataTable>
+
+            <c:if test="#{UserManager.loggedIn}">
+                <h:commandLink value="New Product" immediate="true"
+                               actionListener="#{ProductManager.createRedirect}" action="select">
+                </h:commandLink>
+            </c:if>
 
         </h:form>
     </ui:define>
