@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.fhswf.fit.ws2024.catalogdb.Category;
+import de.fhswf.fit.ws2024.catalogdb.Product;
+import de.fhswf.fit.ws2024.catalogdb.ProductCategory;
+import de.fhswf.fit.ws2024.catalogdb.ProductCategoryId;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -13,7 +16,6 @@ import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 
 @Named("CategoryManager")
 @SessionScoped
@@ -21,6 +23,16 @@ public class CategoryManager implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Category current;
+
+    private Integer selectedProductId;
+
+    public Integer getSelectedProductId() {
+        return selectedProductId;
+    }
+
+    public void setSelectedProductId(Integer selectedProductId) {
+        this.selectedProductId = selectedProductId;
+    }
 
     @Inject
     private CatalogManagerFactory catalogManagerFactory;
@@ -199,5 +211,46 @@ public class CategoryManager implements Serializable {
         }
         context.responseComplete();
     }
+
+    public List<Product> getProductsNotInCategory() {
+        EntityManagerFactory factory = catalogManagerFactory.getFactory();
+        EntityManager manager = factory.createEntityManager();
+
+        List<Product> productsNotInCategory = manager.createQuery(
+                        "SELECT p FROM Product p WHERE :currentCategory NOT MEMBER OF p.categories", Product.class)
+                .setParameter("currentCategory", current)
+                .getResultList();
+
+        return productsNotInCategory;
+    }
+
+    public void addProductToCategory(int selectedProductId) {
+        EntityManagerFactory factory = catalogManagerFactory.getFactory();
+        EntityManager manager = factory.createEntityManager();
+
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+
+        try {
+            Product selectedProduct = manager.find(Product.class, selectedProductId);
+            System.out.println("Selected Product: " + selectedProduct);
+            System.out.println("Selected Product Name: " + selectedProduct.getName());
+            // Relation erstellen
+            ProductCategory productCategory = new ProductCategory();
+            productCategory.setProduct(selectedProduct);
+            productCategory.setCategory(current);
+            ProductCategoryId productCategoryId = new ProductCategoryId();
+            productCategoryId.setProductId(selectedProduct.getId());
+            productCategoryId.setCategoryId(current.getId());
+            productCategory.setId(productCategoryId);
+            manager.persist(productCategory);
+            tx.commit();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            tx.rollback();
+        }
+    }
+
+
 }
 

@@ -55,6 +55,13 @@
                 <h:commandLink value="New Product" immediate="true"
                                actionListener="#{ProductManager.createRedirect}" action="select">
                 </h:commandLink>
+                <h:selectOneMenu value="#{CategoryManager.selectedProductId}">
+                    <f:selectItems value="#{CategoryManager.productsNotInCategory}" var="product"
+                                   itemValue="#{product.id}" itemLabel="#{product.name}" />
+                </h:selectOneMenu>
+
+                <h:commandButton value="Add Product to Category"
+                                 action="#{CategoryManager.addProductToCategory(CategoryManager.selectedProductId)}" />
             </c:if>
 
         </h:form>
